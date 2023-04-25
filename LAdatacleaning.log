@@ -1,0 +1,112 @@
+-------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  \\smb-isl01.fsu.edu\citrix\tal15b\Documents\CAnD3\Dragon's Den\LAdatacleaning.log
+  log type:  text
+ opened on:  25 Apr 2023, 12:35:05
+
+. *** Tim & Trinity's Dragon's Den Project ***
+. *** Racial disparities in marijuana-related arrests in the city of Los Angeles USA 2010-2019 ***
+. import delimited "\\smb-isl01.fsu.edu\citrix\tal15b\Documents\CAnD3\Dragon's Den\Marijuana_Data_LA.csv"
+(encoding automatically selected: ISO-8859-1)
+(16 vars, 24,667 obs)
+
+. 
+. *removing minors
+. drop if age<18
+(1,654 observations deleted)
+
+. 
+. *simplifying descent code to black, white, hisp, asian/pacific islander, other
+. encode descentcode, gen(race)
+
+. recode race (3 4 5 8 9 11 14 =1)(7=10)(13=.)
+(37 changes made to race)
+
+. recode race (6=3)(12=4)(10=5)
+(14700 changes made to race)
+
+. label define racesimp 1 "Asian or Pacific Islander" 2 "Black" 3 "Hispanic/Latino" 5 "Other" 4 "White"
+
+. label values race racesimp
+
+. 
+. *creating more clear value labels for arrest type, removing "dependent" and "other"
+. encode arresttypecode, gen (type)
+
+. drop if type==1 | type==5
+(8 observations deleted)
+
+. label define type1 2 "Felony" 3 "Infraction" 4 "Misdemeanor"
+
+. label values type type1
+
+. 
+. *simplifying charge group description
+. encode chargedescription, gen (chargedesc)
+
+. recode chargedesc (1=26)(3 4 19 20 21 24 25 27 =2)(14 18=7)(5 6 9 10 11 12 13 15 16 17=8)(23=22)
+(21906 changes made to chargedesc)
+
+. recode chargedesc (2=1)(7=2)(8=3)(22=4)(26=5)
+(22672 changes made to chargedesc)
+
+. label define chargedesc1 3 "Possession" 2 "Possession w/ intent to sell" 1 "Distribution/Selling/Transporting" 5 
+> "Cultivating" 4 "Public consumption"
+
+. label values chargedesc chargedesc1
+
+. 
+. *fixing arrest date var from string to numeric
+. gen date = date(arrestdate, "MDY")
+
+. format date %td
+
+. gen year=year(date)
+
+. 
+. *converting sexcode from str to numeric
+. encode sexcode, gen (sex)
+
+. label define sex1 1 "Female" 2 "Male"
+
+. label values sex sex1
+
+. 
+. *dropping missings
+. egen missings= rmiss(reportid year age sex race type chargedesc)
+
+. drop if missings >0
+(335 observations deleted)
+
+. 
+. keep reportid year age sex race type chargedesc
+
+. rename chargedesc charge
+
+. sum 
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+    reportid |     22,670    5.74e+07    6.21e+07       2586   2.01e+08
+         age |     22,670    29.75986    10.97182         18         79
+        race |     22,670     2.93745    .8871999          1          5
+        type |     22,670      3.0206    .9638437          2          4
+      charge |     22,670    2.542567    .9251016          1          5
+-------------+---------------------------------------------------------
+        year |     22,670    2012.645    2.577469       2010       2019
+         sex |     22,670    1.900397    .2994765          1          2
+
+. 
+. 
+. 
+end of do-file
+
+. save "\\smb-isl01.fsu.edu\citrix\tal15b\Documents\CAnD3\Dragon's Den\LA Marijuana Arrests Cleaned.dta"
+file \\smb-isl01.fsu.edu\citrix\tal15b\Documents\CAnD3\Dragon's Den\LA Marijuana Arrests Cleaned.dta saved
+
+. log close
+      name:  <unnamed>
+       log:  \\smb-isl01.fsu.edu\citrix\tal15b\Documents\CAnD3\Dragon's Den\LAdatacleaning.log
+  log type:  text
+ closed on:  25 Apr 2023, 12:35:32
+-------------------------------------------------------------------------------------------------------------------

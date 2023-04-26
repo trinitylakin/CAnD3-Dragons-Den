@@ -54,6 +54,7 @@ label define b_other 0 "Non Black" 1 "Black"
 label values b_other b_other
 codebook b_other
 ttest year, by(b_other)
+
 clonevar time = year
 recode time 2010/2016 = 0
 recode time 2017/2019=1

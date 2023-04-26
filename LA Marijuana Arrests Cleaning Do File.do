@@ -61,7 +61,7 @@ recode time 2017/2019=1
 label define time 0 "Before Legalization" 1 "After Legalization"
 label values time time
 ttest time, by(b_other)
-logit b_other time, or
+logit time b_other, or
 
 encode race, gen(bw)
 codebook bw
@@ -73,4 +73,4 @@ label values bw bw1
 codebook bw
 
 ttest time, by(bw)
-logit bw time, or
+logit time bw, or

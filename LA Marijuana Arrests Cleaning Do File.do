@@ -44,4 +44,32 @@ keep reportid year age sex race type chargedesc
 rename chargedesc charge
 sum 
 
+***Analysis***
 
+encode race, gen(b_other)
+codebook b_other
+recode b_other 1 3/5 = 0
+recode b_other 2 1
+label define b_other 0 "Non Black" 1 "Black"
+label values b_other b_other
+codebook b_other
+ttest year, by(b_other)
+clonevar time = year
+recode time 2010/2016 = 0
+recode time 2017/2019=1
+label define time 0 "Before Legalization" 1 "After Legalization"
+label values time time
+ttest time, by(b_other)
+logit b_other time, or
+
+encode race, gen(bw)
+codebook bw
+recode bw 5= 0
+recode bw 1 3/4 = .
+recode bw 2 = 1
+label define bw1 0 "White" 1 "Black"
+label values bw bw1
+codebook bw
+
+ttest time, by(bw)
+logit bw time, or

@@ -11,7 +11,13 @@ We are interested in assessing racial dispairities in the frequency and severity
 
 <strong> Repository Info: </strong>
 
-Included so far in this package are the final dataset, Stata do-file, and log file for cleaning the dataset. The repository will be updated after running analyses and developing the presentation.
+Included so far in this package are:
+<ul style=“list-style-circle":>
+<li> The final dataset, Stata do-file, and log file for cleaning the dataset. </li>
+<li> Mock presentation materials: compiled preliminary findings and presentation slides. </li>
+<li> Tableau visualizations created from the cleaned dataset. </li>
+</ul>
+<br>
 
 <strong> Program Specs: </strong>
 
